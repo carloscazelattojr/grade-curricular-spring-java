@@ -11,9 +11,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.carlosjunior.gradecurricular.controllers.MateriaController;
 import br.com.carlosjunior.gradecurricular.dto.MateriaDto;
 import br.com.carlosjunior.gradecurricular.entities.MateriaEntity;
 import br.com.carlosjunior.gradecurricular.exceptions.MateriaException;
@@ -72,8 +74,17 @@ public class MateriaServiceImpl implements MateriaService {
 	@Override
 	public List<MateriaDto> listar() {
 		try {
-			return this.mapper.map(materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
+			
+			List<MateriaDto> listMateriasDto = this.mapper.map(materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
 			}.getType());
+			
+			listMateriasDto.forEach(materia -> {
+				materia.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId())).withSelfRel());
+			});
+			
+			return listMateriasDto;		
+			
+			
 		} catch (Exception e) {
 			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
