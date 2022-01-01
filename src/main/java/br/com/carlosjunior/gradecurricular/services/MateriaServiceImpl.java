@@ -18,8 +18,16 @@ import br.com.carlosjunior.gradecurricular.repositories.MateriaRepository;
 @Service
 public class MateriaServiceImpl implements MateriaService {
 
-	@Autowired
+	private static final String MENSAGEM_ERRO = "Erro interno. Contate o administrador do sistema!";
+	private static final String MATERIA_NAO_ENCONTRADA = "Matéria não cadastrada";
+
 	private MateriaRepository materiaRepository;
+	private ModelMapper mapper;
+
+	public MateriaServiceImpl(MateriaRepository materiaRepository) {
+		this.mapper = new ModelMapper();
+		this.materiaRepository = materiaRepository;
+	}
 
 	@Override
 	public Boolean atualizar(MateriaDto materia) {
@@ -29,8 +37,7 @@ public class MateriaServiceImpl implements MateriaService {
 			Optional<MateriaEntity> materiaOptional = materiaRepository.findById(materia.getId());
 
 			if (materiaOptional.isPresent()) {
-				ModelMapper mapper = new ModelMapper();
-				MateriaEntity materiaAtualizada = mapper.map(materia, MateriaEntity.class);
+				MateriaEntity materiaAtualizada = this.mapper.map(materia, MateriaEntity.class);
 				materiaRepository.save(materiaAtualizada);
 				return Boolean.TRUE;
 			}
@@ -59,10 +66,10 @@ public class MateriaServiceImpl implements MateriaService {
 	@Override
 	public List<MateriaDto> listar() {
 		try {
-			ModelMapper mapper =  new ModelMapper();
-			return mapper.map(materiaRepository.findAll(),new TypeToken<List<MateriaDto>>() {}.getType()); 
+			return this.mapper.map(materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
+			}.getType());
 		} catch (Exception e) {
-			return new ArrayList<>();
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -71,28 +78,24 @@ public class MateriaServiceImpl implements MateriaService {
 		try {
 			Optional<MateriaEntity> materiaOptional = materiaRepository.findById(id);
 			if (materiaOptional.isPresent()) {
-				ModelMapper mapper = new ModelMapper();
-				return mapper.map(materiaOptional, MateriaDto.class);
+				return this.mapper.map(materiaOptional, MateriaDto.class);
 			}
-			throw new MateriaException("Matéria não cadastrada", HttpStatus.NOT_FOUND);
+			throw new MateriaException(MATERIA_NAO_ENCONTRADA, HttpStatus.NOT_FOUND);
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
-			throw new MateriaException("Erro interno. Contate o administrador do sistema!",
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@Override
 	public Boolean cadastrar(MateriaDto materia) {
 		try {
-
-			ModelMapper mapper = new ModelMapper();
-			MateriaEntity materiaEntity = mapper.map(materia, MateriaEntity.class);
+			MateriaEntity materiaEntity = this.mapper.map(materia, MateriaEntity.class);
 			materiaRepository.save(materiaEntity);
-			return true;
+			return Boolean.TRUE;
 		} catch (Exception e) {
-			return false;
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
