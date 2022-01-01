@@ -29,7 +29,7 @@ public class MateriaServiceImpl implements MateriaService {
 
 			if (materiaOptional.isPresent()) {
 				ModelMapper mapper = new ModelMapper();
-				MateriaEntity materiaAtualizada = mapper.map(materiaOptional.get(), MateriaEntity.class);
+				MateriaEntity materiaAtualizada = mapper.map(materia, MateriaEntity.class);
 				materiaRepository.save(materiaAtualizada);
 				return Boolean.TRUE;
 			}

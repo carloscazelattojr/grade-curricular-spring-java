@@ -2,6 +2,8 @@ package br.com.carlosjunior.gradecurricular.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +42,12 @@ public class MateriaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Boolean> cadastrarMateria(@RequestBody MateriaDto materia) {
+	public ResponseEntity<Boolean> cadastrarMateria(@Valid @RequestBody MateriaDto materia) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(materiaService.cadastrar(materia));
 	}
 
 	@PutMapping()
-	public ResponseEntity<Boolean> atualizarMateria(@RequestBody MateriaDto materia) {
+	public ResponseEntity<Boolean> atualizarMateria(@Valid @RequestBody MateriaDto materia) {
 		return ResponseEntity.status(HttpStatus.OK).body(materiaService.atualizar(materia));
 	}
 
