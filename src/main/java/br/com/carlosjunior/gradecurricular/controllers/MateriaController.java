@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.carlosjunior.gradecurricular.dto.MateriaDto;
-import br.com.carlosjunior.gradecurricular.entities.MateriaEntity;
-import br.com.carlosjunior.gradecurricular.repositories.MateriaRepository;
 import br.com.carlosjunior.gradecurricular.services.MateriaService;
 
 @RestController
@@ -26,18 +24,15 @@ import br.com.carlosjunior.gradecurricular.services.MateriaService;
 public class MateriaController {
 
 	@Autowired
-	private MateriaRepository repository;
-
-	@Autowired
 	private MateriaService materiaService;
 
 	@GetMapping
-	public ResponseEntity<List<MateriaEntity>> listarMaterias() {
+	public ResponseEntity<List<MateriaDto>> listarMaterias() {
 		return ResponseEntity.status(HttpStatus.OK).body(materiaService.listar());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MateriaEntity> consultarMateria(@PathVariable Long id) {
+	public ResponseEntity<MateriaDto> consultarMateria(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(materiaService.consultar(id));
 	}
 

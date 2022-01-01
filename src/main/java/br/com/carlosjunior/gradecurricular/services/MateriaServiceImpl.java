@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -56,20 +57,22 @@ public class MateriaServiceImpl implements MateriaService {
 	}
 
 	@Override
-	public List<MateriaEntity> listar() {
+	public List<MateriaDto> listar() {
 		try {
-			return materiaRepository.findAll();
+			ModelMapper mapper =  new ModelMapper();
+			return mapper.map(materiaRepository.findAll(),new TypeToken<List<MateriaDto>>() {}.getType()); 
 		} catch (Exception e) {
 			return new ArrayList<>();
 		}
 	}
 
 	@Override
-	public MateriaEntity consultar(Long id) {
+	public MateriaDto consultar(Long id) {
 		try {
 			Optional<MateriaEntity> materiaOptional = materiaRepository.findById(id);
 			if (materiaOptional.isPresent()) {
-				return materiaOptional.get();
+				ModelMapper mapper = new ModelMapper();
+				return mapper.map(materiaOptional, MateriaDto.class);
 			}
 			throw new MateriaException("Matéria não cadastrada", HttpStatus.NOT_FOUND);
 		} catch (MateriaException m) {
