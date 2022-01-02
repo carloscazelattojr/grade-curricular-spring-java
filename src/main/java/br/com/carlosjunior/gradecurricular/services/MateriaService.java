@@ -16,4 +16,8 @@ public interface MateriaService {
 
 	public Boolean cadastrar(final MateriaDto materia);
 
+	public List<MateriaDto> findByHoraMinima(int horaMinima);
+	
+	public List<MateriaDto> findByFrequencia(int frequencia);
+
 }

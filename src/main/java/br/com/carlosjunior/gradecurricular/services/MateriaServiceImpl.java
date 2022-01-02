@@ -74,17 +74,19 @@ public class MateriaServiceImpl implements MateriaService {
 	@Override
 	public List<MateriaDto> listar() {
 		try {
-			
-			List<MateriaDto> listMateriasDto = this.mapper.map(materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
-			}.getType());
-			
+
+			List<MateriaDto> listMateriasDto = this.mapper.map(materiaRepository.findAll(),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+
 			listMateriasDto.forEach(materia -> {
-				materia.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId())).withSelfRel());
+				materia.add(WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+						.withSelfRel());
 			});
-			
-			return listMateriasDto;		
-			
-			
+
+			return listMateriasDto;
+
 		} catch (Exception e) {
 			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -116,4 +118,33 @@ public class MateriaServiceImpl implements MateriaService {
 			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@Override
+	public List<MateriaDto> findByHoraMinima(int horaMinima) {
+
+		try {
+			List<MateriaDto> listMateriasDto = this.mapper.map(materiaRepository.findByHoraMinima(horaMinima),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+			return listMateriasDto;
+
+		} catch (Exception e) {
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public List<MateriaDto> findByFrequencia(int frequencia) {
+
+		try {
+			List<MateriaDto> listMateriasDto = this.mapper.map(materiaRepository.findByFrequencia(frequencia),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+			return listMateriasDto;
+
+		} catch (Exception e) {
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

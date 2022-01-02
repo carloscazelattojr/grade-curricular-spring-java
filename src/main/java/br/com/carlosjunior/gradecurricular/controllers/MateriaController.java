@@ -28,7 +28,7 @@ public class MateriaController {
 	private static final String DELETE = "DELETE";
 	private static final String UPDATE = "UPDATE";
 	private static final String LIST = "GET_ALL";
-	
+
 	@Autowired
 	private MateriaService materiaService;
 
@@ -38,61 +38,86 @@ public class MateriaController {
 
 		response.setData(materiaService.listar());
 		response.setStatusCode(HttpStatus.OK.value());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias()).withSelfRel());
-		
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
+				.withSelfRel());
+
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Response<MateriaDto>> consultarMateria(@PathVariable Long id) {
 		Response<MateriaDto> response = new Response<>();
-		
+
 		MateriaDto materia = materiaService.consultar(id);
-		
+
 		response.setData(materia);
 		response.setStatusCode(HttpStatus.OK.value());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(id)).withSelfRel());
-		
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id)).withRel(DELETE));
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withRel(UPDATE));
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(id))
+				.withSelfRel());
+
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id))
+				.withRel(DELETE));
+		response.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withRel(UPDATE));
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PostMapping
 	public ResponseEntity<Response<Boolean>> cadastrarMateria(@Valid @RequestBody MateriaDto materia) {
-		Response<Boolean> response = new Response<>();		
-		
+		Response<Boolean> response = new Response<>();
+
 		response.setData(materiaService.cadastrar(materia));
 		response.setStatusCode(HttpStatus.CREATED.value());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias()).withRel(LIST));
-		
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
+				.withRel(LIST));
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PutMapping()
 	public ResponseEntity<Response<Boolean>> atualizarMateria(@Valid @RequestBody MateriaDto materia) {
 		Response<Boolean> response = new Response<>();
-		
+
 		response.setData(materiaService.atualizar(materia));
 		response.setStatusCode(HttpStatus.OK.value());
-		
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withSelfRel());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(materia.getId())).withRel(DELETE));
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias()).withRel(LIST));
-		
+
+		response.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withSelfRel());
+		response.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(materia.getId()))
+				.withRel(DELETE));
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
+				.withRel(LIST));
+
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response<Boolean>> excluirMateria(@PathVariable Long id) {
 		Response<Boolean> response = new Response<>();
-		
+
 		response.setData(materiaService.excluir(id));
 		response.setStatusCode(HttpStatus.OK.value());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id)).withSelfRel());
-		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias()).withRel(LIST));		
-		
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id))
+				.withSelfRel());
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
+				.withRel(LIST));
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@GetMapping("/frequencia/{frequencia}")
+	public ResponseEntity<Response<List<MateriaDto>>> listarMateriasPorFrequencia(@PathVariable int frequencia) {
+
+		Response<List<MateriaDto>> response = new Response<>();
+		List<MateriaDto> materias = materiaService.findByFrequencia(frequencia);
+		response.setData(materias);
+		response.setStatusCode(HttpStatus.OK.value());
+		response.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMateriasPorFrequencia(frequencia))
+				.withSelfRel());
+
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
