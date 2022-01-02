@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.carlosjunior.gradecurricular.constants.HyperLinkConstant;
 import br.com.carlosjunior.gradecurricular.dto.MateriaDto;
 import br.com.carlosjunior.gradecurricular.models.Response;
 import br.com.carlosjunior.gradecurricular.services.MateriaService;
@@ -24,10 +25,6 @@ import br.com.carlosjunior.gradecurricular.services.MateriaService;
 @RestController
 @RequestMapping("/materia")
 public class MateriaController {
-
-	private static final String DELETE = "DELETE";
-	private static final String UPDATE = "UPDATE";
-	private static final String LIST = "GET_ALL";
 
 	@Autowired
 	private MateriaService materiaService;
@@ -56,9 +53,9 @@ public class MateriaController {
 				.withSelfRel());
 
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id))
-				.withRel(DELETE));
+				.withRel(HyperLinkConstant.EXCLUIR.getValor()));
 		response.add(WebMvcLinkBuilder
-				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withRel(UPDATE));
+				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withRel(HyperLinkConstant.ATUALIZAR.getValor()));
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
@@ -70,7 +67,7 @@ public class MateriaController {
 		response.setData(materiaService.cadastrar(materia));
 		response.setStatusCode(HttpStatus.CREATED.value());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
-				.withRel(LIST));
+				.withRel(HyperLinkConstant.LISTAR.getValor()));
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
@@ -86,9 +83,9 @@ public class MateriaController {
 				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withSelfRel());
 		response.add(WebMvcLinkBuilder
 				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(materia.getId()))
-				.withRel(DELETE));
+				.withRel(HyperLinkConstant.EXCLUIR.getValor()));
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
-				.withRel(LIST));
+				.withRel(HyperLinkConstant.LISTAR.getValor()));
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
@@ -102,7 +99,7 @@ public class MateriaController {
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).excluirMateria(id))
 				.withSelfRel());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())
-				.withRel(LIST));
+				.withRel(HyperLinkConstant.LISTAR.getValor()));
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
