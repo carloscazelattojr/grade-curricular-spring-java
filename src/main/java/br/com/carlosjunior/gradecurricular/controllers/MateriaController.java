@@ -48,7 +48,7 @@ public class MateriaController {
 		MateriaDto materia = materiaService.consultar(id);
 
 		response.setData(materia);
-		response.setStatusCode(HttpStatus.OK.value());
+		response.setStatusCode(HttpStatus.CREATED.value());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(id))
 				.withSelfRel());
 
@@ -57,7 +57,7 @@ public class MateriaController {
 		response.add(WebMvcLinkBuilder
 				.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).atualizarMateria(materia)).withRel(HyperLinkConstant.ATUALIZAR.getValor()));
 
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PostMapping
