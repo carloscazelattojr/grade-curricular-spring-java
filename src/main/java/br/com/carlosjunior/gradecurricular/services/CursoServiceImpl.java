@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import br.com.carlosjunior.gradecurricular.exceptions.MateriaException;
 import br.com.carlosjunior.gradecurricular.repositories.CursoRepository;
 import br.com.carlosjunior.gradecurricular.repositories.MateriaRepository;
 
+@CacheConfig(cacheNames = { "curso" })
 @Service
 public class CursoServiceImpl implements CursoService {
 
@@ -91,8 +93,7 @@ public class CursoServiceImpl implements CursoService {
 	@CachePut(unless = "#result.size()<3")
 	@Override
 	public List<CursoDto> listar() {
-		return mapper.map(materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
-		}.getType());
+		return mapper.map(cursoRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
 	}
 
 	@Override
